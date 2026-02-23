@@ -13,21 +13,20 @@ class _MyHomePageState extends State<MyHomePage> {
  final heightCM = TextEditingController();
  final heightFt = TextEditingController();
  final heightInch = TextEditingController();
-  String? bmiResult='0';
+  double bmiResult=0;
   String? category;
+
 
   String categoryFinder(double bmi){
     if (bmi<16){return 'You\'re Severely Thin';}
     if (bmi>=16 && bmi <=17){return 'You\'re Moderately Thin';}
     if (bmi>17 && bmi <18.5){return 'You\'re Mildly Thin';}
-    if (bmi>18.5 && bmi <=25){return 'You\'re Normal';}
+    if (bmi>18.5 && bmi <=25){return 'You\'re Healthy';}
     if (bmi>25 && bmi <=30){return 'You\'re Overweight';}
     if (bmi>30 && bmi <=35){return 'You\'re Obese ClassI';}
     if (bmi>35 && bmi <=40){return 'You\'re Obese ClassII';}
     if (bmi>40){return 'You\'re Obese ClassIII';}
     return 'Invalid Data';
-
-
   }
 
 
@@ -68,11 +67,11 @@ void calculation(){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid Value')));
       return;
     }
-    final bmi = weight/(mood*mood);
+    final double bmi = weight/(mood*mood);
     final bmiCategory = categoryFinder(bmi);
 
     setState(() {
-      bmiResult=bmi.toStringAsFixed(2);
+      bmiResult=bmi.ceilToDouble();
       category =bmiCategory;
     });
 
@@ -175,24 +174,129 @@ void calculation(){
               }, child: Text('Result', textAlign: TextAlign.center,),),
 
             SizedBox(height: 16,),
-            Text('Result= $bmiResult', style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight(20),
-              fontStyle: FontStyle.italic,
 
-            ),),
-            Text('$category',style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight(16),
-              fontStyle: FontStyle.normal,
-            ),),
+            if(bmiResult>0 && bmiResult<16)...[
+              Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+
+              ),),
+              Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                color: Colors.lightBlue,
+              ),),
+            ],
+    if (bmiResult>=16 && bmiResult <=17)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.green,
+      ),),
+    ],
+    if (bmiResult>17 && bmiResult <18.5)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.green,
+      ),),
+    ],
+    if (bmiResult>18.5 && bmiResult <=25)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.yellow[800],
+      ),),
+    ],
+    if (bmiResult>25 && bmiResult <=30)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.redAccent[400],
+      ),),
+    ],
+    if (bmiResult>30 && bmiResult <=35)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.red[300],
+      ),),
+    ],
+    if (bmiResult>35 && bmiResult <=40)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.red,
+      ),),
+    ],
+    if (bmiResult>40)...[
+      Text('BMI: ${bmiResult.toInt()}', style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+
+      ),),
+      Text('Your BMI is ${bmiResult.toInt()} and $category.',style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.italic,
+        color: Colors.red[900],
+      ),),
+    ],
             SizedBox(width: 5,height: 35,child: IconButton(onPressed: (){
               setState(() {
                 heightCM.clear();
                 weightKg.clear();
                 heightFt.clear();
                 heightInch.clear();
-                bmiResult='0';
+                bmiResult=0;
                 category=null;
 
               });

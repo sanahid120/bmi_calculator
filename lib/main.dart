@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Home.dart';
+import 'home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,15 +12,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
-      theme: ThemeData(
-
-        inputDecorationTheme: InputDecorationThemeData(
-          fillColor: Colors.white,
-          prefixIconColor: Colors.black,
-
-        )
-      ),
-
       home: MyHomePage(),
     );
   }
