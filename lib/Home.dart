@@ -13,6 +13,23 @@ class _MyHomePageState extends State<MyHomePage> {
  final heightCM = TextEditingController();
  final heightFt = TextEditingController();
  final heightInch = TextEditingController();
+  String? bmiResult='0';
+  String? category;
+
+  String categoryFinder(double bmi){
+    if (bmi<16){return 'You\'re Severely Thin';}
+    if (bmi>=16 && bmi <=17){return 'You\'re Moderately Thin';}
+    if (bmi>17 && bmi <18.5){return 'You\'re Mildly Thin';}
+    if (bmi>18.5 && bmi <=25){return 'You\'re Normal';}
+    if (bmi>25 && bmi <=30){return 'You\'re Overweight';}
+    if (bmi>30 && bmi <=35){return 'You\'re Obese ClassI';}
+    if (bmi>35 && bmi <=40){return 'You\'re Obese ClassII';}
+    if (bmi>40){return 'You\'re Obese ClassIII';}
+    return 'Invalid Data';
+
+
+  }
+
 
  double? cmToMeter(){
   final cm = double.tryParse(heightCM.text.trim());
@@ -20,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return null;
   }
   else{
-    return 100/cm;
+    return cm/100;
   }
  }
 
@@ -40,13 +57,25 @@ class _MyHomePageState extends State<MyHomePage> {
    return totalInch*0.0254;
  }
 
-void calculation(int value){
+void calculation(){
     final weight = double.tryParse(weightKg.text.trim());
     if(weight==null || weight<=0){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid Input',style: TextStyle(color: Colors.red),)));
         return;
     }
     final mood = heightType== HeightType.cm ? cmToMeter():feetInchToMeter();
+    if( mood == null){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid Value')));
+      return;
+    }
+    final bmi = weight/(mood*mood);
+    final bmiCategory = categoryFinder(bmi);
+
+    setState(() {
+      bmiResult=bmi.toStringAsFixed(2);
+      category =bmiCategory;
+    });
+
     
 
   }
@@ -67,17 +96,20 @@ void calculation(int value){
         centerTitle: true,
       ),
       body: Padding(
+
         padding: const EdgeInsets.all(8.0),
         child: ListView(
 
-
           children: [
+
             TextFormField(
-              controller: TextEditingController(),
+              controller: weightKg,
               decoration: InputDecoration(
                 labelText: "weight (kg)",
                 contentPadding: EdgeInsets.all(8),
-                border: OutlineInputBorder()
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                )
               ),
             ),
             SizedBox(height: 16,),
@@ -88,10 +120,15 @@ void calculation(int value){
 
             if(heightType==HeightType.cm)...[
               TextFormField(
+                controller: heightCM,
                 decoration: InputDecoration(
                   labelText: 'height (cm)',
                   contentPadding: EdgeInsets.all(8),
-                  border: OutlineInputBorder(),
+                  hintMaxLines: 2,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+
+                  ),
 
                 ),),
 
@@ -105,6 +142,7 @@ void calculation(int value){
                   children: [
                     Expanded(
                       child: TextFormField(
+                        controller: heightFt,
                         decoration: InputDecoration(
                           labelText: 'feet (\')',
                           contentPadding: EdgeInsets.all(8),
@@ -117,6 +155,7 @@ void calculation(int value){
                     SizedBox(width: 15,),
                     Expanded(
                       child: TextFormField(
+                        controller: heightInch,
                         decoration: InputDecoration(
                           labelText:'inch (")',
                           contentPadding: EdgeInsets.all(8),
@@ -131,14 +170,35 @@ void calculation(int value){
               )
             ],
             SizedBox(height: 16,),
-            ElevatedButton(onPressed: (){}, child: Text('Result', textAlign: TextAlign.center,),),
+            ElevatedButton(onPressed: (){
+              calculation();
+              }, child: Text('Result', textAlign: TextAlign.center,),),
 
             SizedBox(height: 16,),
-            Text('Result', style: TextStyle(
+            Text('Result= $bmiResult', style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight(20),
               fontStyle: FontStyle.italic,
-            ),)
+
+            ),),
+            Text('$category',style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight(16),
+              fontStyle: FontStyle.normal,
+            ),),
+            SizedBox(width: 5,height: 35,child: IconButton(onPressed: (){
+              setState(() {
+                heightCM.clear();
+                weightKg.clear();
+                heightFt.clear();
+                heightInch.clear();
+                bmiResult='0';
+                category=null;
+
+              });
+            }, icon: Icon(Icons.refresh)),),
+
+
           ],
 
         ),
